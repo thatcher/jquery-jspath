@@ -17,7 +17,7 @@ h3. how about a useful example before i loose interest
 
 ok how about this one
 
-@@@ javascript
+@@@javascript
 $.getJSON(url, function(address_book){
 	_('..contact[?(@.name && @.number)]', address_book).each(function(){
 	   console.log('name %s, number %s', this.name, this.number);
@@ -32,7 +32,7 @@ nice!  thank you may I have another?
 
 yes you may.  this one uses a jquery-jspath plugin called jquery-objtree which provides a pretty little gem called _.fn.x
 
-@@@ javascript
+@@@javascript
 $.getJSON(url, function(address_book){
 	$('#address_book').html(
 		_('..contact[?(@.name && @.number)]', address_book).map(function(){
