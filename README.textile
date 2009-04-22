@@ -32,7 +32,7 @@ nice!  thank you may I have another?
 
 yes you may.  this one uses a jquery-jspath plugin called jquery-objtree which provides a pretty little gem called _.fn.x
 
-<code><pre>
+<pre><code>
 $.getJSON(url, function(address_book){
 	$('#address_book').html(
 		_('..contact[?(@.name && @.number)]', address_book).map(function(){
@@ -47,7 +47,7 @@ $.getJSON(url, function(address_book){
   <li><a href="#david">213-654-0987</a></li>
 </ul>
 */
-</pre></code>
+</code></pre>
 
 oh no you didn't! oh yes we did and there is so much more.
 
