@@ -1,0 +1,70 @@
+h1. (function($,_){})(jQuery, jsPath);
+
+jquery-jspath is a very special jquery plugin that is designed, like jquery (thanks to jquery-collections), 
+to deliver a platform for utility plugins that address javascript native objects and arrays, like jquery addresses
+the document object model.
+
+all of this functionality could have been tacked directly onto the jquery namespace '$' but we decided to give
+a hoot and not pollute, filling another well known javascript symbol '_'.  that's right... '_'.
+
+h2. why (function(_){})(jsPath);
+
+at it's very core, this plugin integrates two wonderful projects, jquery-collections by ariel flesler and 
+jspath by stefan goessner.  combining the two results in a very small, simple and elegant way of adding
+jquery-like handling of javascript objects.
+
+h3. how about a useful example before i loose interest
+
+ok how about this one
+
+@@@ javascript
+$.getJSON(url, function(address_book){
+	_('..contact[?(@.name && @.number)]', address_book).each(function(){
+	   console.log('name %s, number %s', this.name, this.number);
+	});
+});
+//>name chris, number 123-456-7890
+//>name john, number 321-465-9078
+//>name david, number 213-654-0987
+@@@
+
+nice!  thank you may I have another?  
+
+yes you may.  this one uses a jquery-jspath plugin called jquery-objtree which provides a pretty little gem called _.fn.x
+
+@@@ javascript
+$.getJSON(url, function(address_book){
+	$('#address_book').html(
+		_('..contact[?(@.name && @.number)]', address_book).map(function(){
+		   return {li: {a: {$href:'#'+this.name, $:this.number}}};
+		}).x();
+	});
+});
+/* results in:
+<ul id='address_book'>
+  <li><a href="#chris">123-456-7890</a></li>
+  <li><a href="#john">321-465-9078</a></li>
+  <li><a href="#david">213-654-0987</a></li>
+</ul>
+*/
+@@@
+
+oh no you didn't! oh yes we did and there is so much more.
+
+h2. ready for more?
+
+have at, we hope to create a user group as soon as we have enough interest.  in the mean time check out these 
+jquery-jspath plugins:
+
+* http://github.com/thatcher/jquery-jspath
+* http://github.com/thatcher/jquery-json
+* http://github.com/thatcher/jquery-loremipsum
+* http://github.com/thatcher/jquery-objtree
+* http://github.com/thatcher/jquery-xslt
+
+qlso please check out the spec for each plugin (test/test.html).  special thanks to aaron quint for the 
+jqunit-spec plugin that all of these plugins use!
+
+
+
+
