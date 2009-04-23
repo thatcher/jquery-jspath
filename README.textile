@@ -5,7 +5,7 @@ to deliver a platform for utility plugins that address javascript native objects
 the document object model.
 
 all of this functionality could have been tacked directly onto the jquery namespace '$' but we decided to give
-a hoot and not pollute, filling another well known javascript symbol '_'.  that's right... '_'.
+a hoot and not pollute, filling another well known javascript symbol underscore.  that's right...
 
 h2. why (function(_){})(jsPath);
 
