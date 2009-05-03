@@ -1,5 +1,5 @@
 /**
- * <: @VERSION@ :>
+ * <: jquery.jspath.1.0.rc0 :>
  * 
  * Copyright (c) 2008 Chris Thatcher (claypooljs.com)
  * Dual licensed under the MIT (MIT-LICENSE.txt)
