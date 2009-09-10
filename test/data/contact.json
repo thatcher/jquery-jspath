@@ -9,6 +9,19 @@
         },
         "email": ["jason@sf.com", "sjones@adobe.com"]
     }, {
+        "$firstName": "Briana",
+        "$lastName": "Banks",
+        "address": {
+            "$city": "Los Angeles, CA",
+            "$zip": 94001,
+            "$address": "333 West Minster Ave"
+        },
+        "email": ["bbanks@wm.com", "bb@blahdeeblah.com"]
+    }]
+}
+
+var addressbook = {
+    'contacts': [{
         "$firstName": "Jason",
         "$lastName": "Jones",
         "address": {
@@ -16,6 +29,50 @@
             "$zip": 94121,
             "$address": "444 Columbus Ave"
         },
-        "email": ["jason@sf.com", "sjones@adobe.com"]
+        "$email": ["jason@sf.com", "sjones@adobe.com"]
+    }, {
+        "$firstName": "Briana",
+        "$lastName": "Banks",
+        "address": {
+            "$city": "Los Angeles, CA",
+            "$zip": 94001,
+            "$address": "333 West Muenster Ave"
+        },
+        "$email": ["bbanks@wm.com", "bb@blahdeeblah.com"]
     }]
+};
+var paths = _("..*", addressbook, {resultType:"JSAM", pathStyle:"DOT"});
+console.log('%o',paths);
+
+var newaddressbook = {};
+(function($,_){
+    for(var i=0;i<paths.length;i++){
+        console.log('eval %o',eval(paths[i]));
+    }
+})(newaddressbook, jsPath);
+
+console.log('reconstituted %o', newaddressbook);
+
+var resolve = function(target, parts){
+    var prop;
+    //console.log("target %o",target);
+    if(parts&&parts.length){
+        prop = parts.shift();
+        prop = (prop.substring(0,1) == "'")?prop.replace("'",'','g'):Number(prop);
+        //console.log("resolving prop %s",prop);
+        return resolve(target[prop], parts);
+    }else{
+        if(typeof(target) == 'object'){
+            target = (target instanceof Array)?[]:{};
+        }
+        console.log('resolved to %o', target);
+        return target;
+    }
 }
+$(paths).map( function(){
+    console.log('path %s', this);
+    var parts = this.replace("$[","").substring(0, this.length-3).split('][');
+    //console.log("parts %o", parts);
+    return resolve(contacts,parts);
+});
+

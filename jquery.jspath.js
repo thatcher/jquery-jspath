@@ -199,6 +199,7 @@
 	function jsonPath(obj, expr, arg) {
 	   var P = {
 	      resultType: arg && arg.resultType || "VALUE",
+	      pathStyle: arg && arg.pathStyle || "ARRAY",
 	      result: [],
 	      normalize: function(expr) {
 	         var subx = [];
@@ -211,11 +212,43 @@
 	      asPath: function(path) {
 	         var x = path.split(";"), p = "$";
 	         for (var i=1,n=x.length; i<n; i++)
-	            p += (/^[0-9*]+$/).test(x[i]) ? ("["+x[i]+"]") : ("['"+x[i]+"']");
+	            p += (P.pathStyle == "DOT")?
+                    ((/^[0-9*]+$/).test(x[i]) ? ("["+x[i]+"]") : ("."+x[i])):
+                    ((/^[0-9*]+$/).test(x[i]) ? ("["+x[i]+"]") : ("['"+x[i]+"']"));
 	         return p;
 	      },
 	      store: function(p, v) {
-	         if (p) P.result[P.result.length] = P.resultType == "PATH" ? P.asPath(p) : v;
+	         if (p) {
+                switch(P.resultType){
+                    case 'VALUE':
+                       P.result[P.result.length] = v;
+					   break;
+                    case 'PATH':
+                       P.result[P.result.length] = P.asPath(p);
+                       break;
+                    case 'MAP':
+					   if(v instanceof Array){
+                            P.result[P.result.length] = [P.asPath(p),'[]'];
+                       }else if(v instanceof Object){
+                            P.result[P.result.length] = [P.asPath(p),'{}'];
+                       }else{
+                            P.result[P.result.length] = [P.asPath(p), v+''];
+                       }
+                       break;
+                    case 'JSAM':
+                       if(v instanceof Array){
+                            P.result[P.result.length] = P.asPath(p)+'=[]';
+                       }else if(v instanceof Object){
+                            P.result[P.result.length] = P.asPath(p)+'={}';
+                       }else{
+                            P.result[P.result.length] = P.asPath(p)+'=\''+v+'\'';
+                       }
+                       break;
+                    default:
+					   P.result[P.result.length] = v;
+                       break;
+                }
+             }
 	         return !!p;
 	      },
 	      trace: function(expr, val, path) {
@@ -238,7 +271,7 @@
 	               P.trace(P.eval(loc, val, path.substr(path.lastIndexOf(";")+1))+";"+x, val, path);
 	            else if (/^\?\(.*?\)$/.test(loc)) // [?(expr)]
 	               P.walk(loc, x, val, path, function(m,l,x,v,p) { if (P.eval(l.replace(/^\?\((.*?)\)$/,"$1"),v[m],m)) P.trace(m+";"+x,v,p); });
-	            else if (/^(-?[0-9]*):(-?[0-9]*):?([0-9]*)$/.test(loc)) // [start:end:step]  phyton slice syntax
+	            else if (/^(-?[0-9]*):(-?[0-9]*):?([0-9]*)$/.test(loc)) // [start:end:step]  python slice syntax
 	               P.slice(loc, x, val, path);
 	         }
 	         else
@@ -274,7 +307,7 @@
 	   };
 	
 	   var $ = obj;
-	   if (expr && obj && (P.resultType == "VALUE" || P.resultType == "PATH")) {
+	   if (expr && obj) {
 	      P.trace(P.normalize(expr).replace(/^\$;/,""), obj, "$");
 	      return P.result.length ? P.result : false;
 	   }
