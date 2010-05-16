@@ -133,10 +133,14 @@
     			return value === undefined ? this[0] != null && this[0][key] : this.each(function(){
     				this[key] = value;
     			});
-    		}
+    		},
+            setArray: function(array){
+                this.length = 0;
+                return Array.prototype.push.apply(this, array);
+            }
     	});
     	//all these methods can be used in the collections, and are exactly (and literally) like in jQuery.
-    	$collection.fn.include( $.fn, 'each,extend,index,setArray,get,size,eq,slice,map,andSelf' );
+    	$collection.fn.include( $.fn, 'each,extend,index,get,size,eq,slice,map,andSelf' );
     		
     })( jQuery );
     
